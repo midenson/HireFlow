@@ -1,5 +1,5 @@
 'use client'
-import { generateFeedback, generateQuestions } from '@/app/actions/action';
+import { generateFeedback, generateQuestions } from '@/app/lib/action';
 import React, { useState, useRef, useEffect } from 'react';
 import TestSpeech from './TestSpeech';
 

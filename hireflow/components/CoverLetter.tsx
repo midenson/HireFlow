@@ -1,4 +1,4 @@
-import { generateCoverLetter } from '@/app/actions/action';
+import { generateCoverLetter } from '@/app/lib/action';
 import { ResumeData } from '@/types/types';
 import React, { useState } from 'react'
 

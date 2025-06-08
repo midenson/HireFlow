@@ -1,5 +1,5 @@
 'use client'
-import { generateFeedback, generateQuestions } from '@/app/actions/action';
+import { generateFeedback, generateQuestions } from '@/app/lib/action';
 import React, { useState } from 'react'
 
 type qAList = {

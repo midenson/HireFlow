@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef } from 'react'
-import { generateSummary, generateCoverLetter } from '@/app/actions/action';
+import { generateSummary, generateCoverLetter } from '@/app/lib/action';
 import { workExperience, ResumeData } from '@/types/types';
 import ModernResume from './MordernResume';
 import { useReactToPrint } from 'react-to-print';

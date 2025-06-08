@@ -1,5 +1,3 @@
-'use server'
-
 import { ID, Account, Client } from "appwrite"
 
 const client = new Client();
