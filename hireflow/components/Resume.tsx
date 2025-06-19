@@ -1,34 +1,47 @@
 'use client'
-import React, { useState, useRef } from 'react'
-import { generateSummary, generateCoverLetter } from '@/app/lib/action';
-import { workExperience, ResumeData } from '@/types/types';
+import React, { useState, useRef, useEffect } from 'react'
+import { generateSummary, generateCoverLetter, createResume } from '@/app/lib/action';
+import { workExperience, ResumeData, coverLetterData } from '@/types/types';
 import ModernResume from './MordernResume';
 import { useReactToPrint } from 'react-to-print';
 import CoverLetter from './CoverLetter';
+import { useUser } from '@/app/lib/stores/hooks/useUser';
 
 const Resume = () => {
   const [resume, setResume] = useState<ResumeData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    linkedin: '',
-    github: '',
+    fullName: 'Ayo Mide',
+    email: 'ayo@mide.com',
+    phone: '1234567890',
+    linkedin: 'https://ayo.com',
+    github: 'https://ayo.com',
     summary: '',
     workExperience: [{
-      position:'',
-      company:'',
+      position:'developer',
+      company:'google',
       startDate:'',
       endDate:'',
-      description:'',
+      description:'Built and maintained several internal web apps using React.',
     }],
-    skills: []
+    skills: ['react', 'javascript', 'LLMs'],
+    coverLetterData: [{
+      address: '123 Sample Street, Lagos',
+      recipientName: 'John doe',
+      recipientRole: 'HR',
+      targetCompany: 'Amazon',
+      targetJobTitle: 'web developer',
+      coverLetterContent: '',
+    }]
   });
   const [ summary, setSummary ] = useState('');
   const [ loading, setLoading ] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null);
-  const coverRef = useRef<HTMLDivElement>(null);
   const coverLetterRef = useRef<HTMLDivElement>(null);
   const [coverLoading, setcoverLoading] = useState(false);
+  const [canDownload, setcanDownload] = useState(false);
+  const [coverLetterDownload, setcoverLetterDownload] = useState(false)
+
+  const { data: user } = useUser();
+  const userId = user?.$id
 
   const handleDownload = useReactToPrint({ 
     contentRef: contentRef,
@@ -46,25 +59,36 @@ const Resume = () => {
     requestAnimationFrame(() => handleDownload());
   };
 
-// cover letter download
+  // cover letter download
 
   const handleCoverDownload = useReactToPrint({ 
-    contentRef: coverRef,
+    contentRef: coverLetterRef,
     documentTitle: 'cover letter',
     onAfterPrint() {
-      console.log('✅ Printed successfully')
+      console.log('✅ Cover Letter Printed successfully')
     },
     onPrintError() {
-      console.log('an error occured while printing, pls try again!')
+      console.log('an error occured while printing, pls try again!');
+      console.trace();
     }
   })
 
-  // safe cover letter download
-
-  const safeHandleCoverDownload = () => {
-    if(!contentRef.current) return;
+  const safeCoverHandleDownload = () => {
+    if(!coverLetterRef.current) return;
     requestAnimationFrame(() => handleCoverDownload());
   };
+
+  useEffect(() => {
+    if (summary && contentRef.current) {
+      setcanDownload(true)
+    }
+  }, [summary, contentRef.current])
+
+  useEffect(() => {
+    if (resume.coverLetterData?.length !== 0 && coverLetterRef.current) {
+      setcoverLetterDownload(true)
+    }
+  }, [ resume.coverLetterData, coverLetterRef ])
 
   const addWorkExperience = () => {
     setResume((prev) => ({
@@ -87,6 +111,36 @@ const Resume = () => {
     setResume((prev) => ({ ...prev, [field]: value }));
   };
 
+// add cover letter data
+
+const addCoverLetter = () => {
+  setResume(prev => ({
+    ...prev,
+    coverLetterData: [
+      ...(prev.coverLetterData || []),
+      {
+        address: '',
+        recipientName: '',
+        recipientRole: '',
+        targetCompany: '',
+        targetJobTitle: '',
+        coverLetterContent: ''
+      }
+    ]
+  }));
+};
+
+const updateCoverLetterData = (
+  index: number,
+  field: keyof coverLetterData,
+  value: string
+) => {
+  const updated = [
+    ...(resume.coverLetterData || [])
+  ];
+  updated[index][field] = value;
+  setResume((prev) => ({...prev, coverLetterData: updated}))
+}
 // function to check if resume field is valid
 
   const isResumeValid = (data: ResumeData) => {
@@ -123,15 +177,23 @@ const Resume = () => {
     Write in the first person, around 3-4 sentences.
   `;
 
+    // call the LLM API to return the resume summary
     const aisummary = await generateSummary(prompt);
     setResume((prev) => ({ ...prev, summary: aisummary }));
     setSummary(aisummary);
+
+    // save resume into the database
+    const newResume = await createResume(resume, userId!);
+    console.log(newResume);
+
     setLoading(false);
 
    } catch (error) {
     console.log(error);
+    console.trace();
     alert(error);
    }
+    setLoading(false)
     console.log(resume)
   }
 
@@ -142,18 +204,29 @@ const Resume = () => {
     }
 
     const prompt = `
-    Generate a professional, concise, and ATS-friendly cover letter for job seeking candidate with the following information:
-    ${resume.fullName}, with skills in ${resume.skills.join(', ')}.
-    Work experience includes ${resume.workExperience
-      .map(w => `${w.position} at ${w.company}`)
-      .join(', ')}.
+      Generate a professional, concise, and ATS-friendly cover letter with this info:
+      - Full Name: ${resume.fullName}
+      - Skills: ${resume.skills.join(', ')}
+      - Work experience: ${resume.workExperience.map(w => `${w.position} at ${w.company}`).join(', ')}
+      - cover letter data: ${resume.coverLetterData?.map(cl => `address: ${cl.address} to recipient name: ${cl.recipientName}, recipient role: ${cl.recipientRole}, target company: ${cl.targetCompany}, target job title: ${cl.targetJobTitle}`)}
+      - today's date: ${new Date().toLocaleDateString()}
 
-    Write in the first person. Make sure to fill in the full name, company name and all other relevant information in the spaces provided.
+      Use a natural tone. Insert the name, company, and job title where appropriate.
+      Omit header/footer and closing like "Sincerely".
+      Also, make sure to omit unnecessary informations like where the candidate saw the posting, make it a cover letter that can be sent to the recipient without any further editing.
   `;
       setcoverLoading(true);
       try {
           const letter = await generateCoverLetter(prompt);
-          setResume((prev) => ({...prev, coverLetterContent: letter}))
+          setResume(prev => ({
+            ...prev,
+            coverLetterData: [
+              {
+                ...prev.coverLetterData?.[0], // retain existing fields like recipientName
+                coverLetterContent: letter,
+              }
+            ]
+          }));
       } catch (error) {
           console.log(error);
           alert(error)
@@ -262,7 +335,55 @@ const Resume = () => {
           Add Experience
         </button>
       </div>
+{/* cover letter UI */}
+      <div>
+        <label>Cover Letters</label>
+        {resume.coverLetterData?.map((cl, i) => (
+          <div key={i} className="border p-3 rounded mb-3 space-y-2">
+            <input
+              placeholder="Address"
+              value={cl.address}
+              onChange={e => updateCoverLetterData(i, 'address', e.target.value)}
+              className="input"
+            />
+            <input
+              placeholder="Recipient Name"
+              value={cl.recipientName}
+              onChange={e => updateCoverLetterData(i, 'recipientName', e.target.value)}
+              className="input"
+            />
+            <input
+              placeholder="Recipient Role"
+              value={cl.recipientRole}
+              onChange={e => updateCoverLetterData(i, 'recipientRole', e.target.value)}
+              className="input"
+            />
+            <input
+              placeholder="Target Company"
+              value={cl.targetCompany}
+              onChange={e => updateCoverLetterData(i, 'targetCompany', e.target.value)}
+              className="input"
+            />
+            <input
+              placeholder="Target Job Title"
+              value={cl.targetJobTitle}
+              onChange={e => updateCoverLetterData(i, 'targetJobTitle', e.target.value)}
+              className="input"
+            />
+            {/* <textarea
+              placeholder="Cover Letter Content"
+              value={cl.coverLetterContent}
+              onChange={e => updateCoverLetterData(i, 'coverLetterContent', e.target.value)}
+              className="input textarea"
+            /> */}
+          </div>
+        ))}
+        <button type="button" onClick={addCoverLetter} className="btn-primary">
+          Add Cover Letter
+        </button>
+      </div>
 
+{/* cover letter UI end */}
       <div>
         <label>Skills (comma separated)</label>
         <input type="text" onChange={updateSkills} className="input" />
@@ -280,7 +401,7 @@ const Resume = () => {
             <ModernResume data={resume} ref={contentRef} />
             <button
               onClick={safeHandleDownload}
-              disabled={!contentRef.current}
+              disabled={!canDownload}
               className="p-3 bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Download Resume
@@ -297,17 +418,17 @@ const Resume = () => {
         { coverLoading ? 'loading...' : ' generate cover letter with AI' }
       </button>
     </div>
-    {resume.coverLetterContent && (
+    {resume.coverLetterData?.[0]?.coverLetterContent && (
         <div className="mt-6 bg-white p-4 border rounded shadow">
           <h2 className="font-semibold mb-2">Generated cover letter:</h2>
           <div>
-            <CoverLetter data={resume} ref={coverLetterRef}/>
-            <button
-              onClick={safeHandleCoverDownload}
-              disabled={!coverRef.current}
+            <CoverLetter data={resume} ref={coverLetterRef} />
+            <button 
+              onClick={safeCoverHandleDownload}
+              disabled={!coverLetterDownload}
               className="p-3 bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              download cover letter
+                Download Cover Letter
             </button>
           </div>
         </div>

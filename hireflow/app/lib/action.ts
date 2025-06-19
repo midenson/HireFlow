@@ -1,5 +1,9 @@
 'use server'
 
+import { ResumeData } from "@/types/types";
+import { databases } from "./appwrite";
+import { ID, Permission, Role } from "appwrite";
+
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 export async function generateQuestions(prompt: string) {
@@ -107,3 +111,29 @@ export const generateCoverLetter = async (prompt: string) => {
     const data = await response.json();
     return data.choices[0].message.content;
 }
+
+export const createResume = async (resume: ResumeData, userId: string) => {
+  return await databases.createDocument(
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+    process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID!,
+    ID.unique(),
+    {
+      userId,
+      fullName: resume.fullName,
+      email: resume.email,
+      phone: resume.phone,
+      linkedin: resume.linkedin,
+      github: resume.github,
+      summary: resume.summary,
+      workExperience: resume.workExperience.map((exp) => JSON.stringify(exp)),
+      skills: resume.skills.map((s) => JSON.stringify(s)),
+      coverLetterData: resume.coverLetterData?.map((cover) => JSON.stringify(cover))
+    },
+    [
+      Permission.read(Role.any()),
+      Permission.write(Role.any()),
+      Permission.read(Role.guests()),
+      Permission.write(Role.guests()),
+    ]
+  );
+};

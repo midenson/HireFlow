@@ -10,7 +10,7 @@ const ModernResume = React.forwardRef<HTMLDivElement, ModernResumeProps>(
     return (
       <div
         ref={ref}
-        className="print:w-[210mm] print:h-[297mm] w-full h-auto px-[20mm] py-[15mm] box-border bg-white text-black"
+        className="print:w-[210mm] print:h-[200mm] w-full h-auto px-[20mm] py-[15mm] box-border bg-white text-black"
       >
         {/* Header */}
         <header className="border-b border-gray-300 pb-4 mb-6">
