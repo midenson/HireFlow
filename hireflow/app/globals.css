@@ -19,3 +19,18 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* tailwind.css or global.css */
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none;
+}
+.textarea {
+  @apply min-h-[100px];
+}
+.btn-primary {
+  @apply bg-blue-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50;
+}
+.btn-secondary {
+  @apply bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 disabled:opacity-50;
+}

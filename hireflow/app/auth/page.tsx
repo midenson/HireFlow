@@ -83,45 +83,79 @@ const Auth = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="p-4">
-      {errorMsg && <p className="text-red-500 mb-2">{errorMsg}</p>}
+  <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-md space-y-6">
+      <h1 className="text-2xl font-bold text-center text-gray-800">Welcome to Hireflow</h1>
+
+      {errorMsg && (
+        <div className="text-red-600 bg-red-100 p-2 rounded text-sm text-center">
+          {errorMsg}
+        </div>
+      )}
 
       {!userData ? (
         <>
-          <input
-            placeholder="Email"
-            className="border p-2 mb-2 block"
-            onChange={(e) => {
-              setEmail(e.target.value);
-              seterrorMsg('');
-            }}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border p-2 mb-2 block"
-            onChange={(e) => {
-              setPassword(e.target.value);
-              seterrorMsg('');
-            }}
-          />
-          <button onClick={handleRegister} className="p-2 bg-green-500 text-white mr-2">
-            Register
-          </button>
-          <button onClick={handleLogin} className="p-2 bg-blue-500 text-white">
-            Login
-          </button>
+          <div className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                seterrorMsg('');
+              }}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                seterrorMsg('');
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-4">
+            <button
+              onClick={handleRegister}
+              className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
+            >
+              Register
+            </button>
+            <button
+              onClick={handleLogin}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+            >
+              Login
+            </button>
+          </div>
         </>
       ) : (
-        <div>
-          <p className="text-green-700 mb-2">Welcome, {userData.email}</p>
-          <button onClick={handleLogout} className="p-2 bg-red-500 text-white">
+        <div className="text-center space-y-4">
+          <p className="text-green-700 font-medium">Welcome, {userData.email}</p>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
+          >
             Logout
           </button>
         </div>
       )}
+
+      {/* CTA Banner */}
+      <div className="mt-6 border-t pt-4 text-center text-sm text-gray-600">
+        Ready to build your professional profile?
+        <a
+          href="/resume"
+          className="block mt-2 text-blue-600 font-semibold hover:underline"
+        >
+          Go to Resume & Cover Letter Generator →
+        </a>
+      </div>
     </div>
-  );
+  </div>
+);
 } 
 
 export default Auth

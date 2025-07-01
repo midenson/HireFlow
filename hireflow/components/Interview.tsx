@@ -247,75 +247,109 @@ const handleGrading = async (e: React.FormEvent) => {
     }
   };
 
-  return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <input type="text" name="jobTitle" placeholder="Job Title" value={form.jobTitle} onChange={handleChange} className="border p-2 w-full" />
-        <input type="text" name="level" placeholder="Level" value={form.level} onChange={handleChange} className="border p-2 w-full" />
-        <input type="text" name="company" placeholder="Company" value={form.company} onChange={handleChange} className="border p-2 w-full" />
-        <select multiple value={form.interview} onChange={handleSelect} className="border p-2 w-full h-32">
+return (
+  <div className="bg-gray-50 min-h-screen p-4 max-w-4xl mx-auto">
+    {/* 💡 Catchy Call-to-Action Banner */}
+    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md mb-6 shadow-md flex items-center justify-between flex-wrap">
+      <div className="flex items-center space-x-3">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z" />
+        </svg>
+        <p className="font-medium text-base md:text-lg">
+          Need a job-winning resume or cover letter powered by AI?
+        </p>
+      </div>
+      <a
+        href="/"
+        className="mt-3 md:mt-0 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all font-semibold"
+      >
+        Launch Resume & Cover Letter Tool →
+      </a>
+    </div>
+
+    {/* Interview Config Form */}
+    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-xl shadow">
+      <h2 className="text-2xl font-bold text-gray-800">Interview Configuration</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input
+          type="text"
+          name="jobTitle"
+          placeholder="Job Title"
+          value={form.jobTitle || ''}
+          onChange={handleChange}
+          className="input"
+        />
+        <input
+          type="text"
+          name="level"
+          placeholder="Level"
+          value={form.level || ''}
+          onChange={handleChange}
+          className="input"
+        />
+        <input
+          type="text"
+          name="company"
+          placeholder="Company"
+          value={form.company || ''}
+          onChange={handleChange}
+          className="input"
+        />
+        <select
+          multiple
+          value={form.interview || []}
+          onChange={handleSelect}
+          className="input h-32"
+        >
           <option value="technical">Technical</option>
           <option value="behavioral">Behavioral</option>
           <option value="personal">Personal</option>
         </select>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-          {loading ? 'Generating...' : 'Generate Questions'}
-        </button>
-      </form>
+      </div>
 
-      <form onSubmit={handleGrading} className="mt-8 space-y-4">
-        {questions.map((qa, idx) => (
-          <div key={qa.id}>
-            <p className="font-semibold">{idx + 1}. {qa.question}</p>
-            <textarea className="border w-full p-2" rows={3} value={qa.answer} onChange={e => {
+      <button
+        type="submit"
+        className="btn-primary w-full md:w-fit"
+      >
+        {loading ? 'Generating...' : 'Generate Questions'}
+      </button>
+    </form>
+
+    {/* Answer Section */}
+    <form onSubmit={handleGrading} className="mt-10 space-y-6 bg-white p-6 rounded-xl shadow">
+      <h2 className="text-2xl font-bold text-gray-800">Answer the Questions</h2>
+
+      {questions.map((qa, idx) => (
+        <div key={qa.id} className="space-y-2">
+          <p className="font-semibold text-gray-700">{idx + 1}. {qa.question}</p>
+          <textarea
+            className="input textarea"
+            rows={3}
+            value={qa.answer || ''}
+            onChange={e => {
               const updated = [...questions];
               updated[idx].answer = e.target.value;
               setQuestions(updated);
-            }} />
-          </div>
-        ))}
-        {grading.map((g, i) => (
-          <div key={i} className="bg-gray-100 p-2 rounded">
-            <p><strong>Grade:</strong> {g.grade}</p>
-            <p><strong>Feedback:</strong> {g.feedback}</p>
-          </div>
-        ))}
-        {questions.length > 0 && (
-          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
-            {loading ? 'Grading...' : 'Submit Answers'}
-          </button>
-        )}
-      </form>
+            }}
+          />
+        </div>
+      ))}
 
-      {/* Start Interview */}
-      <div className="mt-8">
-        <h2 className="text-lg font-bold mb-2">Speech Interview</h2>
-        {!interviewStarted ? (
-        <button
-          onClick={handleClick}
-          className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
-        >
-          Start Interview
-        </button>
-      ) : (
-        <button
-          onClick={handleClick}
-          className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
-        >
-          Start Interview
+      {grading.map((g, i) => (
+        <div key={i} className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+          <p className="font-semibold text-green-700"><strong>Grade:</strong> {g.grade}</p>
+          <p className="text-gray-700"><strong>Feedback:</strong> {g.feedback}</p>
+        </div>
+      ))}
+
+      {questions.length > 0 && (
+        <button type="submit" className="btn-secondary w-full md:w-fit">
+          {loading ? 'Grading...' : 'Submit Answers'}
         </button>
       )}
-      <button
-          onClick={proceedToNext}
-          className="bg-blue-600 ml-4 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
-        >
-          proceed
-        </button>
-        { listening && <TestSpeech transcript={transcript} setTranscript={setTranscript} listening={listening} setListening={setListening} />}
-        {interviewStarted && <p className="text-green-600 mt-2">Listening for your response...</p>}
-      </div>
-    </div>
-  );
+    </form>
+  </div>
+);
 };
 
 export default Interview;

@@ -234,207 +234,122 @@ const updateCoverLetterData = (
       setcoverLoading(false)
   }
 
-  return (
-    <div>
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-4 space-y-6">
-      <div>
-        <label>Full Name</label>
-        <input
-          type="text"
-          value={resume.fullName}
-          onChange={e => handleChange('fullName', e.target.value)}
-          className="input"
-          required
-        />
+return (
+  <div className="bg-gray-50 min-h-screen p-4">
+    {/* 💡 CTA Banner to Interview Tool */}
+    <div className="max-w-4xl mx-auto mb-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex items-center space-x-3">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z" />
+        </svg>
+        <p className="font-medium text-base md:text-lg">
+          Need AI-generated interview questions & feedback?
+        </p>
       </div>
-      <div>
-        <label>Email</label>
-        <input
-          type="email"
-          value={resume.email}
-          onChange={e => handleChange('email', e.target.value)}
-          className="input"
-          required
-        />
-      </div>
-      <div>
-        <label>Phone</label>
-        <input
-          type="tel"
-          value={resume.phone}
-          onChange={e => handleChange('phone', e.target.value)}
-          className="input"
-        />
-      </div>
-      <div>
-        <label>LinkedIn</label>
-        <input
-          type="url"
-          value={resume.linkedin}
-          onChange={e => handleChange('linkedin', e.target.value)}
-          className="input"
-        />
-      </div>
-      <div>
-        <label>GitHub</label>
-        <input
-          type="url"
-          value={resume.github}
-          onChange={e => handleChange('github', e.target.value)}
-          className="input"
-        />
-      </div>
-      {/* <div>
-        <label>Summary</label>
-        <textarea
-          value={resume.summary}
-          onChange={e => handleChange('summary', e.target.value)}
-          className="input textarea"
-        />
-      </div> */}
+      <a
+        href="/interview"
+        className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all font-semibold"
+      >
+        Try the Interview Generator →
+      </a>
+    </div>
 
-      <div>
-        <label>Work Experience</label>
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-8">
+      <h1 className="text-3xl font-bold text-center text-gray-800">AI Resume & Cover Letter Generator</h1>
+
+      {/* Personal Info */}
+      <div className="bg-white p-6 rounded-xl shadow space-y-4">
+        <h2 className="text-xl font-semibold text-gray-700">Personal Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" value={resume.fullName || ''} onChange={e => handleChange('fullName', e.target.value)} placeholder="Full Name" className="input" required />
+          <input type="email" value={resume.email || ''} onChange={e => handleChange('email', e.target.value)} placeholder="Email" className="input" required />
+          <input type="tel" value={resume.phone || ''} onChange={e => handleChange('phone', e.target.value)} placeholder="Phone" className="input" />
+          <input type="url" value={resume.linkedin || ''} onChange={e => handleChange('linkedin', e.target.value)} placeholder="LinkedIn" className="input" />
+          <input type="url" value={resume.github || ''} onChange={e => handleChange('github', e.target.value)} placeholder="GitHub" className="input" />
+        </div>
+      </div>
+
+      {/* Work Experience */}
+      <div className="bg-white p-6 rounded-xl shadow space-y-4">
+        <h2 className="text-xl font-semibold text-gray-700">Work Experience</h2>
         {resume.workExperience.map((we, i) => (
-          <div key={i} className="border p-3 rounded mb-3 space-y-2">
-            <input
-              placeholder="Position"
-              value={we.position}
-              onChange={e => updateWorkExperience(i, 'position', e.target.value)}
-              className="input"
-            />
-            <input
-              placeholder="Company"
-              value={we.company}
-              onChange={e => updateWorkExperience(i, 'company', e.target.value)}
-              className="input"
-            />
-            <input
-              type='month'
-              placeholder="Start Date"
-              value={we.startDate}
-              onChange={e => updateWorkExperience(i, 'startDate', e.target.value)}
-              className="input"
-            />
-            <input
-              type="month"
-              placeholder="End Date"
-              value={we.endDate}
-              onChange={e => updateWorkExperience(i, 'endDate', e.target.value)}
-              className="input"
-            />
-            <textarea
-              placeholder="Description"
-              value={we.description}
-              onChange={e => updateWorkExperience(i, 'description', e.target.value)}
-              className="input textarea"
-            />
+          <div key={i} className="border border-gray-200 p-4 rounded-md space-y-3 bg-gray-50">
+            <input placeholder="Position" value={we.position || ''} onChange={e => updateWorkExperience(i, 'position', e.target.value)} className="input" />
+            <input placeholder="Company" value={we.company || ''} onChange={e => updateWorkExperience(i, 'company', e.target.value)} className="input" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input type="month" placeholder="Start Date" value={we.startDate || ''} onChange={e => updateWorkExperience(i, 'startDate', e.target.value)} className="input" />
+              <input type="month" placeholder="End Date" value={we.endDate || ''} onChange={e => updateWorkExperience(i, 'endDate', e.target.value)} className="input" />
+            </div>
+            <textarea placeholder="Description" value={we.description || ''} onChange={e => updateWorkExperience(i, 'description', e.target.value)} className="input textarea" />
           </div>
         ))}
-        <button type="button" onClick={addWorkExperience} className="btn-primary">
-          Add Experience
-        </button>
+        <button type="button" onClick={addWorkExperience} className="btn-primary w-fit">+ Add Experience</button>
       </div>
-{/* cover letter UI */}
-      <div>
-        <label>Cover Letters</label>
+
+      {/* Cover Letter */}
+      <div className="bg-white p-6 rounded-xl shadow space-y-4">
+        <h2 className="text-xl font-semibold text-gray-700">Cover Letter</h2>
         {resume.coverLetterData?.map((cl, i) => (
-          <div key={i} className="border p-3 rounded mb-3 space-y-2">
-            <input
-              placeholder="Address"
-              value={cl.address}
-              onChange={e => updateCoverLetterData(i, 'address', e.target.value)}
-              className="input"
-            />
-            <input
-              placeholder="Recipient Name"
-              value={cl.recipientName}
-              onChange={e => updateCoverLetterData(i, 'recipientName', e.target.value)}
-              className="input"
-            />
-            <input
-              placeholder="Recipient Role"
-              value={cl.recipientRole}
-              onChange={e => updateCoverLetterData(i, 'recipientRole', e.target.value)}
-              className="input"
-            />
-            <input
-              placeholder="Target Company"
-              value={cl.targetCompany}
-              onChange={e => updateCoverLetterData(i, 'targetCompany', e.target.value)}
-              className="input"
-            />
-            <input
-              placeholder="Target Job Title"
-              value={cl.targetJobTitle}
-              onChange={e => updateCoverLetterData(i, 'targetJobTitle', e.target.value)}
-              className="input"
-            />
-            {/* <textarea
-              placeholder="Cover Letter Content"
-              value={cl.coverLetterContent}
-              onChange={e => updateCoverLetterData(i, 'coverLetterContent', e.target.value)}
-              className="input textarea"
-            /> */}
+          <div key={i} className="border border-gray-200 p-4 rounded-md space-y-3 bg-gray-50">
+            <input placeholder="Address" value={cl.address || ''} onChange={e => updateCoverLetterData(i, 'address', e.target.value)} className="input" />
+            <input placeholder="Recipient Name" value={cl.recipientName || ''} onChange={e => updateCoverLetterData(i, 'recipientName', e.target.value)} className="input" />
+            <input placeholder="Recipient Role" value={cl.recipientRole || ''} onChange={e => updateCoverLetterData(i, 'recipientRole', e.target.value)} className="input" />
+            <input placeholder="Target Company" value={cl.targetCompany || ''} onChange={e => updateCoverLetterData(i, 'targetCompany', e.target.value)} className="input" />
+            <input placeholder="Target Job Title" value={cl.targetJobTitle || ''} onChange={e => updateCoverLetterData(i, 'targetJobTitle', e.target.value)} className="input" />
           </div>
         ))}
-        <button type="button" onClick={addCoverLetter} className="btn-primary">
-          Add Cover Letter
-        </button>
+        <button type="button" onClick={addCoverLetter} className="btn-primary w-fit">+ Add Cover Letter</button>
       </div>
 
-{/* cover letter UI end */}
-      <div>
-        <label>Skills (comma separated)</label>
-        <input type="text" onChange={updateSkills} className="input" />
+      {/* Skills */}
+      <div className="bg-white p-6 rounded-xl shadow space-y-4">
+        <h2 className="text-xl font-semibold text-gray-700">Skills</h2>
+        <input type="text" placeholder="e.g. JavaScript, React, LLMs" onChange={updateSkills} className="input" />
       </div>
 
+      {/* Generate Button */}
       <button type="submit" className="btn-primary w-full">
-        { loading ? 'loading...' : 'Generate Resume with AI' }
+        {loading ? 'Loading...' : 'Generate Resume with AI'}
       </button>
     </form>
-    {summary && (
-        <div className="mt-6 bg-white p-4 border rounded shadow">
-          <h2 className="font-semibold mb-2">Generated Resume:</h2>
-          <pre className="whitespace-pre-wrap">{summary}</pre>
-          <div>
-            <ModernResume data={resume} ref={contentRef} />
-            <button
-              onClick={safeHandleDownload}
-              disabled={!canDownload}
-              className="p-3 bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Download Resume
-            </button>
-          </div>
-        </div>
-      )}
 
-    <div>
-      <button
-        onClick={generateLetter}
-        className="p-3 bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        { coverLoading ? 'loading...' : ' generate cover letter with AI' }
+    {/* Resume Output */}
+    {summary && (
+      <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded-xl shadow space-y-4">
+        <h2 className="text-xl font-bold text-gray-800">Generated Resume:</h2>
+        <ModernResume data={resume} ref={contentRef} />
+        <div className="flex justify-end">
+          <button onClick={safeHandleDownload} disabled={!canDownload} className="btn-secondary">
+            Download Resume
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* Generate Cover Letter */}
+    <div className="max-w-4xl mx-auto mt-8 flex justify-center">
+      <button onClick={generateLetter} className="btn-primary w-full max-w-md">
+        {coverLoading ? 'Loading...' : 'Generate Cover Letter with AI'}
       </button>
     </div>
+
+    {/* Cover Letter Output */}
     {resume.coverLetterData?.[0]?.coverLetterContent && (
-        <div className="mt-6 bg-white p-4 border rounded shadow">
-          <h2 className="font-semibold mb-2">Generated cover letter:</h2>
-          <div>
-            <CoverLetter data={resume} ref={coverLetterRef} />
-            <button 
-              onClick={safeCoverHandleDownload}
-              disabled={!coverLetterDownload}
-              className="p-3 bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                Download Cover Letter
-            </button>
-          </div>
+      <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded-xl shadow space-y-4">
+        <h2 className="text-xl font-bold text-gray-800">Generated Cover Letter:</h2>
+        <CoverLetter data={resume} ref={coverLetterRef} />
+        <div className="flex justify-end">
+          <button onClick={safeCoverHandleDownload} disabled={!coverLetterDownload} className="btn-secondary">
+            Download Cover Letter
+          </button>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
 }
 
 export default Resume
+
+
+// <ModernResume data={resume} ref={contentRef} />
