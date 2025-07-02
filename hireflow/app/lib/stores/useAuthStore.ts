@@ -1,6 +1,17 @@
 import { create } from "zustand";
 
-type User = any;
+interface User {
+    $id: string; // Appwrite ID for the user
+    email: string;
+    name?: string | null; // Name might be optional or null
+    emailVerification?: boolean;
+    phoneVerification?: boolean;
+    // Add any other properties you actually use from the Appwrite user object,
+    // such as:
+    // $createdAt: string;
+    // $updatedAt: string;
+    // prefs: { [key: string]: any }; // If you interact with user preferences
+}
 
 interface AuthStore {
     user: User | null;

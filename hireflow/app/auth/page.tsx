@@ -1,5 +1,5 @@
 'use client'
-import { ID } from "appwrite";
+import { AppwriteException, ID } from "appwrite";
 import { account } from "../lib/appwrite";
 import { useState } from "react";
 import { useUser } from "../lib/stores/hooks/useUser";
@@ -32,16 +32,20 @@ const Auth = () => {
             Cookies.set('user', 'true', { path: '/'}); // setting a cookie for the user 
           }
           const { data: freshUser } = await refetch();
-          setUser(freshUser);
+          if (freshUser) {
+            setUser(freshUser)
+          }
           router.push('/dashboard');
 
           // error messages
           seterrorMsg('');
           alert('user successfully created...')
-        } catch (error: any) {
-          alert(error.message);
-          seterrorMsg(error.message)
-          console.log(error);
+        } catch (error) {
+          if (error instanceof AppwriteException) {
+            alert(error.message);
+            seterrorMsg(error.message)
+            console.log(error);
+          }
         }
     }
 
@@ -53,7 +57,9 @@ const Auth = () => {
         if (await account.get()) {
           Cookies.set('user', 'true', { path: '/'}); // setting a cookie for the user 
         }
-        setUser(freshUser);
+        if (freshUser) {
+          setUser(freshUser)
+        }
         router.push('/dashboard'); // directing the authenticated user to the dashboard
 
         alert('user is now logged in...')
@@ -75,8 +81,10 @@ const Auth = () => {
       
       await refetch();
       alert('Logged out successfully.');
-    } catch (error: any) {
-      console.log('Logout failed:', error.message);
+    } catch (error) {
+      if (error instanceof AppwriteException) {
+        console.log('Logout failed:', error.message);
+      }
     }
   };
 
