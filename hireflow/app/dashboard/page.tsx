@@ -6,7 +6,7 @@ import { useUserResumes } from '../lib/stores/hooks/useUserResumes';
 
 const DashboardPage = () => {
   const { data: userData } = useUser();
-  const { data: resumes, isLoading } = useUserResumes(userData?.$id!);
+  const { data: resumes, isLoading } = useUserResumes(userData?.$id);
 
   if (isLoading) return <p>Loading your resumes...</p>;
 
