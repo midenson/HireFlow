@@ -1,5 +1,6 @@
 'use client';
 
+import { workExperience } from '@/types/types';
 import { useUser } from '../lib/stores/hooks/useUser';
 import { useUserResumes } from '../lib/stores/hooks/useUserResumes';
 
@@ -10,7 +11,7 @@ const DashboardPage = () => {
   if (isLoading) return <p>Loading your resumes...</p>;
 
   // Helper: Ensure workExperience and coverLetterData are arrays
-  const parseArray = (field: any) => {
+  const parseArray = (field: string) => {
     if (Array.isArray(field)) return field;
     if (typeof field === 'string') {
       try {
@@ -85,7 +86,7 @@ return (
                     <h3 className="font-semibold text-md mb-1 text-gray-700">Work Experience</h3>
                     {workExperience.length > 0 ? (
                       <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                        {workExperience.map((job: any, i: number) => (
+                        {workExperience.map((job: workExperience, i: number) => (
                           <li key={i}>
                             <strong>{job.position}</strong> at {job.company} ({job.startDate} – {job.endDate})<br />
                             <span>{job.description}</span>
