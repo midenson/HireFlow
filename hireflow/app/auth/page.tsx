@@ -39,10 +39,10 @@ const Auth = () => {
 
           // error messages
           seterrorMsg('');
-          alert('user successfully created...')
+          // alert('user successfully created...')
         } catch (error) {
           if (error instanceof AppwriteException) {
-            alert(error.message);
+            // alert(error.message);
             seterrorMsg(error.message)
             console.log(error);
           }
@@ -62,10 +62,12 @@ const Auth = () => {
         }
         router.push('/dashboard'); // directing the authenticated user to the dashboard
 
-        alert('user is now logged in...')
-      } catch (error: any) {
-        seterrorMsg(error);
-        alert(error);
+        // alert('user is now logged in...')
+      } catch (error) {
+        if (error instanceof AppwriteException) {
+          seterrorMsg(error.message);
+          alert(error.message);
+        }
       }
     }
 
@@ -80,7 +82,7 @@ const Auth = () => {
       Cookies.remove('user');
       
       await refetch();
-      alert('Logged out successfully.');
+      // alert('Logged out successfully.');
     } catch (error) {
       if (error instanceof AppwriteException) {
         console.log('Logout failed:', error.message);
