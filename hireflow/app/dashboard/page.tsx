@@ -27,7 +27,7 @@ const DashboardPage = () => {
   // Gather all valid cover letters
 const coverLetters = resumes
   ?.flatMap(resume => {
-    return parseArray(resume.coverLetterData).map((cl: any) => {
+    return parseArray(resume.coverLetterData).map((cl: string) => {
       const parsedCL = typeof cl === 'string' ? JSON.parse(cl) : cl;
       return {
         ...parsedCL,
