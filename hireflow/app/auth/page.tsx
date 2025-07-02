@@ -1,7 +1,7 @@
 'use client'
 import { ID } from "appwrite";
 import { account } from "../lib/appwrite";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useUser } from "../lib/stores/hooks/useUser";
 import { useAuthStore } from "../lib/stores/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";

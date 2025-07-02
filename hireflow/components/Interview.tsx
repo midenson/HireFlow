@@ -1,7 +1,7 @@
 'use client'
 import { generateFeedback, generateQuestions } from '@/app/lib/action';
-import React, { useState, useRef, useEffect } from 'react';
-import TestSpeech from './TestSpeech';
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
 type qAList = {
   id: string;
@@ -26,7 +26,7 @@ interface formType {
 const Interview = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [interviewStarted, setInterviewStarted] = useState(false);
-  const [transcript, setTranscript] = useState('');
+  const transcript = '';
   const [listening, setListening] = useState(false);
   const [canProceed, setCanProceed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -216,36 +216,36 @@ const handleGrading = async (e: React.FormEvent) => {
     loadVoices();
   };
   
-  const askNextQuestion = (index: number) => {
-    if (index < questions.length) {
-      setCurrentIndex(index);
-      setCanProceed(false);
-      speakText(questions[index].question, () => {
-        setCanProceed(true); // Allow proceeding after speaking ends
-        setListening(true)
-      });
-    } else {
-      console.log("🎉 Interview complete.");
-      setInterviewStarted(false);
-    }
-  };
+  // const askNextQuestion = (index: number) => {
+  //   if (index < questions.length) {
+  //     setCurrentIndex(index);
+  //     setCanProceed(false);
+  //     speakText(questions[index].question, () => {
+  //       setCanProceed(true); // Allow proceeding after speaking ends
+  //       setListening(true)
+  //     });
+  //   } else {
+  //     console.log("🎉 Interview complete.");
+  //     setInterviewStarted(false);
+  //   }
+  // };
   
-  const handleClick = () => {
-    setInterviewStarted(true);
-    speakText(
-      "Hello! Welcome to your interview assistant. Let's get started with the first question.",
-      () => askNextQuestion(0)
-    );
-    console.log('interview has started...')
-  };
+  // const handleClick = () => {
+  //   setInterviewStarted(true);
+  //   speakText(
+  //     "Hello! Welcome to your interview assistant. Let's get started with the first question.",
+  //     () => askNextQuestion(0)
+  //   );
+  //   console.log('interview has started...')
+  // };
   
-  const proceedToNext = () => {
-    if (canProceed) {
-      setTranscript('');
-      askNextQuestion(currentIndex + 1);
-      setListening(false)
-    }
-  };
+  // const proceedToNext = () => {
+  //   if (canProceed) {
+  //     setTranscript('');
+  //     askNextQuestion(currentIndex + 1);
+  //     setListening(false)
+  //   }
+  // };
 
 return (
   <div className="bg-gray-50 min-h-screen p-4 max-w-4xl mx-auto">
@@ -259,12 +259,12 @@ return (
           Need a job-winning resume or cover letter powered by AI?
         </p>
       </div>
-      <a
+      <Link
         href="/"
         className="mt-3 md:mt-0 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all font-semibold"
       >
         Launch Resume & Cover Letter Tool →
-      </a>
+      </Link>
     </div>
 
     {/* Interview Config Form */}
@@ -347,6 +347,9 @@ return (
           {loading ? 'Grading...' : 'Submit Answers'}
         </button>
       )}
+      {
+        canProceed && <p className='opacity-0 bg-transparent'></p>
+      }
     </form>
   </div>
 );

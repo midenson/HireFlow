@@ -1,4 +1,3 @@
-import Interview from "@/components/Interview";
 import Resume from "@/components/Resume";
 
 export default function Home() {

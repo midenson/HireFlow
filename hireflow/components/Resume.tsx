@@ -82,7 +82,7 @@ const Resume = () => {
     if (summary && contentRef.current) {
       setcanDownload(true)
     }
-  }, [summary, contentRef.current])
+  }, [summary])
 
   useEffect(() => {
     if (resume.coverLetterData?.length !== 0 && coverLetterRef.current) {

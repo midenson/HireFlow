@@ -1,6 +1,5 @@
-import { generateCoverLetter } from '@/app/lib/action';
 import { ResumeData } from '@/types/types';
-import React, { useState } from 'react'
+import React from 'react'
 
 interface coverLetterProps {
   data: ResumeData
