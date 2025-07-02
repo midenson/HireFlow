@@ -24,11 +24,11 @@ interface formType {
 }
 
 const Interview = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [interviewStarted, setInterviewStarted] = useState(false);
-  const transcript = '';
-  const [listening, setListening] = useState(false);
-  const [canProceed, setCanProceed] = useState(false);
+  // const [currentIndex, setCurrentIndex] = useState(0);
+  // const [interviewStarted, setInterviewStarted] = useState(false);
+  // const [transcript, setTranscript] = useState('');
+  // const [listening, setListening] = useState(false);
+  // const [canProceed, setCanProceed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<qAList[]>([]);
   const [grading, setGrading] = useState<LLMParsedResult[]>([]);
@@ -42,16 +42,16 @@ const Interview = () => {
 
 // submit transcript results
 
-useEffect(() => {
-  if (!listening && transcript.trim() && interviewStarted) {
-    setQuestions((prev) => {
-      const updated = [...prev];
-      updated[currentIndex].answer = transcript.trim();
-      return updated;
-    });
-    console.log(`✅ Answer saved for question ${currentIndex}: ${transcript}`);
-  }
-}, [transcript, listening, interviewStarted]);
+// useEffect(() => {
+//   if (!listening && transcript.trim() && interviewStarted) {
+//     setQuestions((prev) => {
+//       const updated = [...prev];
+//       updated[currentIndex].answer = transcript.trim();
+//       return updated;
+//     });
+//     console.log(`✅ Answer saved for question ${currentIndex}: ${transcript}`);
+//   }
+// }, [transcript, listening, interviewStarted]);
 
 
   // Handle Form
@@ -188,33 +188,33 @@ const handleGrading = async (e: React.FormEvent) => {
 
   // 🔊 Speak Question
 
-  const speakText = (text: string, onEnd?: () => void) => {
-    const synth = window.speechSynthesis;
-    const utterance = new SpeechSynthesisUtterance(text);
+  // const speakText = (text: string, onEnd?: () => void) => {
+  //   const synth = window.speechSynthesis;
+  //   const utterance = new SpeechSynthesisUtterance(text);
   
-    utterance.onstart = () => console.log('🔊 Speaking:', text);
-    utterance.onend = () => {
-      console.log('✅ Done speaking');
-      onEnd?.(); // Callback after speech ends
-    };
-    utterance.onerror = (e) => console.log('❌ Speech error:', e.error);
+  //   utterance.onstart = () => console.log('🔊 Speaking:', text);
+  //   utterance.onend = () => {
+  //     console.log('✅ Done speaking');
+  //     onEnd?.(); // Callback after speech ends
+  //   };
+  //   utterance.onerror = (e) => console.log('❌ Speech error:', e.error);
   
-    const loadVoices = () => {
-      const voices = synth.getVoices();
-      if (voices.length > 0) {
-        const selectedVoice = voices.find(voice => voice.name.includes('Google')) || voices[0];
-        utterance.voice = selectedVoice;
-        utterance.volume = 1;
-        utterance.pitch = 1.2;
-        utterance.rate = 1.1;
-        synth.speak(utterance);
-      } else {
-        setTimeout(loadVoices, 100);
-      }
-    };
+  //   const loadVoices = () => {
+  //     const voices = synth.getVoices();
+  //     if (voices.length > 0) {
+  //       const selectedVoice = voices.find(voice => voice.name.includes('Google')) || voices[0];
+  //       utterance.voice = selectedVoice;
+  //       utterance.volume = 1;
+  //       utterance.pitch = 1.2;
+  //       utterance.rate = 1.1;
+  //       synth.speak(utterance);
+  //     } else {
+  //       setTimeout(loadVoices, 100);
+  //     }
+  //   };
   
-    loadVoices();
-  };
+  //   loadVoices();
+  // };
   
   // const askNextQuestion = (index: number) => {
   //   if (index < questions.length) {
@@ -347,9 +347,6 @@ return (
           {loading ? 'Grading...' : 'Submit Answers'}
         </button>
       )}
-      {
-        canProceed && <p className='opacity-0 bg-transparent'></p>
-      }
     </form>
   </div>
 );
